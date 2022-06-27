@@ -1,5 +1,5 @@
 const registerOptions = {
-  name: {
+  full_name: {
     required: 'Name is required',
     minLength: {
       value: 2,
@@ -12,6 +12,9 @@ const registerOptions = {
       value: 2,
       message: 'must be at least 2 characters',
     },
+  },
+  country: {
+    required: 'country is required',
   },
   email: {
     required: 'Email is required',

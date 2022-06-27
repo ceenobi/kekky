@@ -7,22 +7,26 @@ import {
   Container,
   VStack,
   Heading,
-  // Select,
-  // FormLabel,
   Checkbox,
   Stack,
+  Alert,
+  AlertIcon,
 } from '@chakra-ui/react';
 import { useForm, FormProvider } from 'react-hook-form';
-//import { BsFillLockFill } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerUser } from '../Redux/Actions/authHead';
 
-import FormInput from '../utils/FormAuth';
+import formOutput from '../utils/FormAuth';
 import registerOptions from '../utils/InputValidation';
-//import data from '../data/Countries';
+import data from '../data/Countries';
 //import state from '../data/States';
 
 export default function Register() {
-  // const [selectedCountry, setSelectedCountry] = React.useState();
+  const dispatch = useDispatch();
+  const { message } = useSelector(state => state.message);
+
+  const [selectedCountry, setSelectedCountry] = React.useState();
   // const [selectedState, setSelectedState] = React.useState();
   // const [selectedCity, setSelectedCity] = React.useState();
 
@@ -30,19 +34,36 @@ export default function Register() {
   // const availableCities = availableState?.states?.find(
   //   s => s.name === selectedState
   // );
-
-
-  const methods = useForm();
+  const methods = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+      phone: '',
+    },
+  });
   const {
-    register,
     handleSubmit,
+    register,
     formState: { errors },
   } = methods;
+
   const handleError = errors => {};
 
   const onSubmit = data => {
     console.log(data);
+    dispatch(
+      registerUser(
+        data.full_name,
+        data.username,
+        data.email,
+        data.country,
+        data.phone,
+        data.password,
+        data.confirmPassword
+      )
+    );
   };
+
   return (
     <Box>
       <Container maxW={['container.lg', '400px']}>
@@ -55,18 +76,18 @@ export default function Register() {
         <FormProvider {...methods}>{/* errors */}</FormProvider>
         <form onSubmit={handleSubmit(onSubmit, handleError)}>
           <FormControl>
-            <FormInput
-              name="name"
-              placeholder="name"
+            <formOutput.FormInput
+              name="full_name"
+              placeholder="fullname"
               type="text"
               label="Full NAME"
               required
-              {...register('name', registerOptions.name)}
+              {...register('full_name', registerOptions.full_name)}
             />
-            {errors?.name && errors.name.message}
+            {errors?.full_name && errors.full_name.message}
           </FormControl>
           <FormControl>
-            <FormInput
+            <formOutput.FormInput
               name="username"
               placeholder="nickname"
               type="text"
@@ -77,7 +98,7 @@ export default function Register() {
             {errors?.username && errors.username.message}
           </FormControl>
           <FormControl>
-            <FormInput
+            <formOutput.FormInput
               name="email"
               placeholder="johndoe@email.com"
               type="email"
@@ -88,7 +109,7 @@ export default function Register() {
             {errors?.email && errors.email.message}
           </FormControl>
           <FormControl mb={4}>
-            <FormInput
+            <formOutput.FormInput
               name="phone"
               placeholder="phone"
               type="number"
@@ -98,11 +119,12 @@ export default function Register() {
             />
             {errors?.phone && errors.phone.message}
           </FormControl>
-          {/* <FormControl mb={2}>
-            <FormLabel htmlFor="country">COUNTRY</FormLabel>
-            <Select
+          <FormControl mb={2}>
+            <formOutput.SelectInput
               placeholder="Choose Country"
+              label="SELECT COUNTRY"
               value={selectedCountry}
+              required
               onChange={e => setSelectedCountry(e.target.value)}
               {...register('country', registerOptions.country)}
             >
@@ -113,9 +135,9 @@ export default function Register() {
                   </option>
                 );
               })}
-            </Select>
+            </formOutput.SelectInput>
             {errors?.country && errors.country.message}
-          </FormControl> */}
+          </FormControl>
           {/* <FormControl mb={2}>
             <FormLabel htmlFor="state">STATE</FormLabel>
             <Select
@@ -153,7 +175,7 @@ export default function Register() {
             {errors?.cities && errors.cities.message}
           </FormControl> */}
           <FormControl>
-            <FormInput
+            <formOutput.FormInput
               name="password"
               placeholder="******"
               type="password"
@@ -164,7 +186,7 @@ export default function Register() {
             {errors?.password && errors.password.message}
           </FormControl>
           <FormControl>
-            <FormInput
+            <formOutput.FormInput
               name="confirmPassword"
               placeholder="******"
               type="password"
@@ -190,6 +212,12 @@ export default function Register() {
           <Button mt={4} mb={6} type="submit" w="full">
             Continue
           </Button>
+          {message && (
+            <Alert status="error">
+              <AlertIcon />
+              {message}
+            </Alert>
+          )}
         </form>
         <Box>
           <Text>

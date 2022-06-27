@@ -1,9 +1,10 @@
 import React from 'react';
 import { ChakraProvider, Box, Grid, theme } from '@chakra-ui/react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Outlet } from 'react-router-dom';
 
 import Navbar from './component/Navbar/Navbar';
-import routes from './routes'
+import {Login,Register, Home, Dashboard} from './component'
+import PrivateRoutes from './container/protectedRoutes';
 
 function App() {
   return (
@@ -12,11 +13,12 @@ function App() {
         <Grid p={3}>
           <Navbar />
           <Routes>
-            {routes.map((route, i) => {
-              return (
-                <Route key={i} path={route.path} element={<route.element />} />
-              );
-            })}
+            <Route path="/" element={<Home />} />
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+            <Route element={<PrivateRoutes />}>
+              <Route path="dashboard" element={<Dashboard />} />
+            </Route>
           </Routes>
         </Grid>
       </Box>

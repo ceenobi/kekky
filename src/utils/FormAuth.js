@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
-import { Input } from '@chakra-ui/react';
+import { Input, Select } from '@chakra-ui/react';
 
 const FormInput = forwardRef(
   ({ type, name, required, label, placeholder, ...props }, ref) => {
@@ -16,12 +16,8 @@ const FormInput = forwardRef(
           name={name}
           id={name}
           placeholder={placeholder}
-          //   _placeholder={{ color: 'paint.100' }}
-          //   color="paint.100"
           type={type}
           ref={ref}
-          //   focusBorderColor="paint.100"
-          //   bg="gray.300"
           mb={2}
         />
       </>
@@ -29,9 +25,34 @@ const FormInput = forwardRef(
   }
 );
 
-export default FormInput;
+const SelectInput = forwardRef(
+  ({ type, name, required, label, placeholder, ...props }, ref) => {
+    return (
+      <>
+        {label ? (
+          <label htmlFor={name}>
+            {label} <span> {required && '*'}</span>
+          </label>
+        ) : null}
+        <Select
+          {...props}
+          name={name}
+          id={name}
+          placeholder={placeholder}
+          type={type}
+          ref={ref}
+          mb={2}
+        />
+      </>
+    );
+  }
+);
 
-FormInput.propTypes = {
+const formOutput = {FormInput, SelectInput}
+
+export default formOutput
+
+formOutput.propTypes = {
   type: PropTypes.oneOf(['text', 'email', 'password', 'number']),
   register: PropTypes.func,
   name: PropTypes.string.isRequired,
@@ -39,7 +60,7 @@ FormInput.propTypes = {
   placeholder: PropTypes.string,
 };
 
-FormInput.defaultProps = {
+formOutput.defaultProps = {
   type: 'text',
   name: 'text',
   label: '',

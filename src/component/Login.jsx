@@ -15,7 +15,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { BsFillLockFill } from 'react-icons/bs';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-import FormInput from '../utils/FormAuth';
+import formOutput from '../utils/FormAuth';
 import registerOptions from '../utils/InputValidation';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -30,6 +30,12 @@ export default function Login() {
 
   const location = useLocation();
   const redirect = location.search ? location.search.split('=')[1] : '/';
+
+    useEffect(() => {
+      if (isLoggedIn) {
+        navigate(redirect);
+      }
+    }, [isLoggedIn, navigate, redirect]);
 
   const methods = useForm({
     defaultValues: {
@@ -55,11 +61,7 @@ export default function Login() {
     dispatch(login(data.email, data.password));
   };
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate(redirect);
-    }
-  }, [isLoggedIn, navigate, redirect]);
+
 
   return (
     <Box mt={1} py={4} mb={6}>
@@ -79,9 +81,9 @@ export default function Login() {
             color="white"
           >
             {isSignup ? (
-              <Text>Signup with Email</Text>
+              <Text>Signin with Email</Text>
             ) : (
-              <Text>Signup with Phone</Text>
+              <Text>Signin with Phone</Text>
             )}
           </Box>
         </VStack>
@@ -90,7 +92,7 @@ export default function Login() {
           {isSignup ? (
             <>
               <FormControl>
-                <FormInput
+                <formOutput.FormInput
                   name="phone"
                   placeholder="phone"
                   type="number"
@@ -103,7 +105,7 @@ export default function Login() {
             </>
           ) : (
             <FormControl>
-              <FormInput
+              <formOutput.FormInput
                 name="email"
                 placeholder="johndoe@email.com"
                 type="email"
@@ -116,7 +118,7 @@ export default function Login() {
           )}
 
           <FormControl>
-            <FormInput
+            <formOutput.FormInput
               name="password"
               placeholder="******"
               type="password"
